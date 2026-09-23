@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from inspection.models import Inspection
-from inspection.watermark_query import sync_line, visible_rows
 from inspection.rules import judge
 
 
@@ -46,11 +45,10 @@ def logout_view(request):
 
 @login_required
 def list_view(request):
-    rows, hidden = visible_rows(Inspection.objects.all())
     return render(
         request,
         "list.html",
-        {"rows": rows, "hidden_line": sync_line(hidden), "can_write": _can_write(request.user)},
+        {"rows": Inspection.objects.all(), "can_write": _can_write(request.user)},
     )
 
 
